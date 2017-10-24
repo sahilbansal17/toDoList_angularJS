@@ -1,0 +1,48 @@
+<html ng-app="chatApp">
+    <head>
+        <title>My To Do List</title>
+        <script src="angular.min.js"></script>
+        <script src="app.js"></script>
+        <link rel="stylesheet" href="bootstrap.css">
+    </head>
+    <body>
+        <div ng-controller="toDoCtrl as toDo">
+            <input type="text" id="getTask" class="form-control" ng-model="toDo.name" ng-keypress="($event.charCode==13)?((toDo.updateMode==0)?toDo.add(toDo.name):toDo.updateTask()):return" autofocus>
+            <button class="btn btn-lg btn-success btn-block" ng-click="toDo.add(toDo.name)" ng-if="toDo.updateMode==0">Add</button>
+            <button class="btn btn-lg btn-primary btn-block" ng-if="toDo.updateMode==1" ng-click="toDo.updateTask()">Update</button>
+            <ul class="list-group">
+                <li ng-repeat="item in toDo.tasks" ng-if="item.editMode==0" class="list-group-item" ng-class={"list-group-item-danger":!item.status,"list-group-item-success":item.status}>
+                    <div class="row">
+                        <div class="col-md-5">
+                                {{item.text}}
+                            </div>
+                            <div class="col-md-1">
+                                <button ng-click="toDo.remove($index)" class="btn btn-danger">
+                                    X
+                                </button> 
+                            </div>
+                            <div class="col-md-1">
+                                    <button ng-click="toDo.taskCompleted($index)" class="btn btn-success" ng-if="item.status==0">
+                                            Done
+                                    </button> 
+                                    <button ng-click="toDo.undoTask($index)" class="btn btn-light" ng-if="item.status==1">
+                                        Undo
+                                    </button> 
+                            </div>
+                            <div class="col-md-1">
+                                    <button class="btn btn-primary" ng-click="toDo.update($index);angular.element('#getTask').focus()" onclick="focusMethod()">Edit</button>
+                            </div>
+                            <div class="col-md-2">
+                                    <span ng-if="item.updateTime==0">Created at: {{item.time | date:"dd/MMM hh:mm:ss"}}</span>
+                                    <span ng-if="item.updateTime!=0">Edited at: {{item.updateTime | date:"dd/MMM hh:mm:ss"}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                    <button class="btn btn-default" ng-if="$index!=0" ng-click="toDo.moveUp($index)">Up</button>
+                                    <button class="btn btn-default" ng-if="$index!=toDo.tasks.length-1" ng-click="toDo.moveDown($index)">Down</button>
+                            </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>
