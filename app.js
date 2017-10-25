@@ -1,10 +1,11 @@
-angular.module("chatApp",[])
+angular.module("chatApp",["firebase"])
 .controller("toDoCtrl",ctrlFun)
 
-function ctrlFun(){
+function ctrlFun($firebaseArray){
     //console.log("Controller loaded.");
     var TODO = this;
-    TODO.tasks = [];
+    var tasks = firebase.database().ref('tasks');
+    TODO.tasks = $firebaseArray(tasks);
     TODO.updateMode = 0;
     TODO.updateIndex;
     function addItem(task){
@@ -15,7 +16,7 @@ function ctrlFun(){
         obj.editMode = 0;
         obj.updateTime = 0;
         if(obj.text){
-            TODO.tasks.push(obj);
+            TODO.tasks.$add(obj);
         } //it will consider text='0' as string
         console.log(TODO.tasks);
         TODO.name="";
